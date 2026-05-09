@@ -15,6 +15,7 @@ import {
   Flex,
   Text,
 } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 
 const NavBar = () => {
   const currentPath = usePathname();
@@ -70,7 +71,7 @@ const AuthStatus = ({ currentPath }: { currentPath: string }) => {
     router.push(currentPath);
   };
 
-  if (isPending) return null;
+  if (isPending) return <Skeleton width="3rem" />;
 
   if (!session)
     return (
