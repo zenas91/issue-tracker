@@ -4,12 +4,18 @@ import { notFound } from "next/navigation";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
 import DeleteIssueButton from "./DeleteIssueButton";
+import { auth } from "@/app/lib/auth";
+import { headers } from "next/headers";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
 const IssueDetailPail = async ({ params }: Props) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   const paramValues = await params;
   const id = parseInt(paramValues.id);
 
@@ -26,12 +32,14 @@ const IssueDetailPail = async ({ params }: Props) => {
       <Box className="md:col-span-4">
         <IssueDetails issue={issue} />
       </Box>
-      <Box>
-        <Flex direction="column" gap="4">
-          <EditIssueButton issueId={paramValues.id} />
-          <DeleteIssueButton issueId={issue.id} />
-        </Flex>
-      </Box>
+      {session && (
+        <Box>
+          <Flex direction="column" gap="4">
+            <EditIssueButton issueId={paramValues.id} />
+            <DeleteIssueButton issueId={issue.id} />
+          </Flex>
+        </Box>
+      )}
     </Grid>
   );
 };
