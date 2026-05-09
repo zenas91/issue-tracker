@@ -1,10 +1,11 @@
 "use client";
 import { signUp } from "@/app/lib/auth_client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField, Button } from "@radix-ui/themes";
+import Link from "next/link";
 
 const schema = z
   .object({
@@ -21,6 +22,8 @@ const schema = z
 type FormValues = z.infer<typeof schema>;
 
 const SignUpPage = () => {
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callbackURL") || "/";
   const router = useRouter();
   const {
     register,
@@ -35,9 +38,9 @@ const SignUpPage = () => {
       name: data.name,
       email: data.email,
       password: data.password,
-      callbackURL: "/",
+      callbackURL: callbackURL,
     });
-    router.push("/");
+    router.push(callbackURL);
   };
 
   return (
@@ -87,9 +90,12 @@ const SignUpPage = () => {
           </Button>
           <p className="text-center text-sm">
             Already have an account?{" "}
-            <a href="/signin" className="text-blue-500 underline">
+            <Link
+              href={`/signin?callbackURL=${callbackURL}`}
+              className="text-blue-500 underline"
+            >
               Sign In
-            </a>
+            </Link>
           </p>
         </form>
       </div>

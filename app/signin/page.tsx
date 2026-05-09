@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from "@/app/lib/auth_client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const SignInPage = () => {
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callbackURL") || "/";
   const router = useRouter();
   const {
     register,
@@ -27,13 +29,13 @@ const SignInPage = () => {
     await signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: "/",
+      callbackURL: callbackURL,
     });
-    router.push("/");
+    router.push(callbackURL);
   };
 
   const handleGoogle = async () => {
-    await signIn.social({ provider: "google" });
+    await signIn.social({ provider: "google", callbackURL: callbackURL });
   };
 
   return (
