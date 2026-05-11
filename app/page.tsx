@@ -3,6 +3,7 @@ import IssuesSummary from "./IssuesSummary";
 import LatestIssues from "./LatestIssues";
 import IssueChart from "./IssueChart";
 import { Flex, Grid } from "@radix-ui/themes";
+import { Metadata } from "next";
 
 export default async function Home() {
   const [open, inProgress, closed] = await Promise.all([
@@ -20,3 +21,8 @@ export default async function Home() {
     </Grid>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Dashboard",
+  description: "This shows summary of the project Issues.",
+};
